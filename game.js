@@ -70,8 +70,8 @@ if (typeof document !== 'undefined') {
   const toastEl = document.getElementById('toast');
   let toastT;
   function toast(msg) {
-    toastEl.textContent = msg; toastEl.hidden = false;
-    clearTimeout(toastT); toastT = setTimeout(() => toastEl.hidden = true, 1500);
+    toastEl.textContent = msg;
+    clearTimeout(toastT); toastT = setTimeout(() => toastEl.textContent = '', 1500);
   }
 
   function place(x, y) {
@@ -105,8 +105,8 @@ if (typeof document !== 'undefined') {
   function plan(g) {
     const here = [Math.round(g.x), Math.round(g.y)], list = attractions();
     if (g.rides < g.wants && list.length) {
-      for (let tries = 0; tries < 4; tries++) {
-        const a = list[Math.floor(Math.random() * list.length)];
+      list.sort(() => Math.random() - 0.5); // shortcut: biased shuffle, fine for picking a ride
+      for (const a of list) {
         const p = findPath(grid, ...here, a.x, a.y);
         if (p) return Object.assign(g, { path: p, target: a, leaving: false });
       }
@@ -131,6 +131,7 @@ if (typeof document !== 'undefined') {
     if (g.leaving) { g.gone = true; return; }
     const t = g.target;
     if (grid[t.y][t.x] === t.type) {
+      if (!g.rides) money += 5; // entry fee, charged only once a guest actually rides
       money += TOOLS[t.type].ticket; g.rides++; g.riding = rand(1.5, 3); g.mood = 1.5;
     }
     g.path = null;
@@ -231,7 +232,6 @@ if (typeof document !== 'undefined') {
     spawnTimer -= dt;
     if (n && spawnTimer <= 0 && guests.length < 20 + n * 8) {
       spawnTimer = Math.max(0.5, 5 - n * 0.4);
-      money += 5; // entry fee
       guests.push({ x: GATE.x, y: GATE.y, ox: rand(-0.2, 0.2), oy: rand(-0.2, 0.2), rides: 0, wants: 2 + Math.floor(rand(0, 4)),
         riding: 0, mood: 0, path: null, color: `hsl(${rand(0, 360)},70%,55%)` });
     }

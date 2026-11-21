@@ -16,16 +16,17 @@
   button:focus-visible { outline: 2px solid #fff; }
   canvas { width: 100%; max-width: 960px; border-radius: 12px; touch-action: none; box-shadow: 0 8px 30px #0008; }
   #toast { position: fixed; top: 16px; background: #e63946; padding: 8px 14px; border-radius: 8px; }
+  #toast:empty { display: none; }
   p { margin: 0; opacity: .7; font-size: 13px; text-align: center; }
 </style>
 </head>
 <body>
   <h1>✨ Dream Park Builder</h1>
-  <div id="hud" aria-live="polite"></div>
+  <div id="hud"></div>
   <div id="tools" role="toolbar" aria-label="Build tools"></div>
   <canvas id="park" aria-label="Your park. Click or drag to build."></canvas>
   <p>Lay paths from the 🎟️ gate, build rides next to them, and guests will come. Build a castle for fireworks at night. Keys 1-9 pick tools.</p>
-  <div id="toast" hidden></div>
+  <div id="toast" aria-live="polite"></div>
   <script src="game.js"></script>
 </body>
 </html>
